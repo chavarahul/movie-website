@@ -14,7 +14,7 @@ const App = () => {
     setLoading(true);
     setError('');
     try {
-      const response = await fetch(`http://localhost:5000/api/search?q=${title}`);
+      const response = await fetch(`https://movie-website-3.onrender.com/api/search?q=${title}`);
       const data = await response.json();
       setMovies(data);
     } catch (error) {

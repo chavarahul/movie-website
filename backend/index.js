@@ -10,7 +10,7 @@ const cors = require('cors');
 
 app.use(cors());
 
-app.get('/api/search', async (req, res) => {
+app.get('https://movie-website-3.onrender.com/api/search', async (req, res) => {
     const query = req.query.q;
     if (!query) {
         return res.status(400).json({ error: 'Query parameter is required' });
@@ -24,12 +24,8 @@ app.get('/api/search', async (req, res) => {
             publication_date: book.editions?.docs[0]?.title || 'Unknown',
             editions: book.editions?.docs || [],
         }));
-
-        // Fetch random dog images
         const dogImageRequests = books.map(() => axios.get('https://dog.ceo/api/breeds/image/random'));
         const dogImages = await Promise.all(dogImageRequests);
-
-        // Attach random dog images to books
         const booksWithImages = books.map((book, index) => ({
             ...book,
             image: dogImages[index].data.message
