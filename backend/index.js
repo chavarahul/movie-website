@@ -10,7 +10,7 @@ const cors = require('cors');
 
 app.use(cors());
 
-app.get('https://movie-website-3.onrender.com/api/search', async (req, res) => {
+app.get('/api/search', async (req, res) => {
     const query = req.query.q;
     if (!query) {
         return res.status(400).json({ error: 'Query parameter is required' });
