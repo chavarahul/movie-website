@@ -14,7 +14,7 @@ const App = () => {
     setLoading(true);
     setError('');
     try {
-      const response = await fetch(`https://movie-website-3.onrender.com/api/search?q=${title}`);
+      const response = await fetch(`https://backend-mu-lovat.vercel.app/api/search?q=${title}`);
       const data = await response.json();
       setMovies(data);
     } catch (error) {
