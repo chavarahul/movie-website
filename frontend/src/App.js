@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, } from "react";
 import './App.css';
 import SearchIcon from './search.svg';
 import MovieCard from './MovieCard';
 import Loader from "./Loader";
+import axios from 'axios'
 
 const App = () => {
   const [movies, setMovies] = useState([]);
@@ -14,18 +15,31 @@ const App = () => {
     setLoading(true);
     setError('');
     try {
-      const response = await fetch(`https://backend-mu-lovat.vercel.app/api/search?q=${title}`);
-      const data = await response.json();
-      setMovies(data);
+      //express
+      // const respons = await fetch(`https://backend-mu-lovat.vercel.app/api/search?q=${title}`);
+      // const data = await respons.json();
+
+
+      const response = await axios.get(`https://openlibrary.org/search.json?q=${encodeURIComponent(searchTerm)}&fields=key,title,author_name,editions`);
+        const books = response.data.docs.map(book => ({
+          title: book.title,
+          author: book.author_name ? book.author_name[0] : 'Unknown Author',
+          publication_date: book.editions?.docs[0]?.title || 'Unknown',
+          editions: book.editions?.docs || [],
+        }));
+        const dogImageRequests = books.map(() => axios.get('https://dog.ceo/api/breeds/image/random'));
+        const dogImages = await Promise.all(dogImageRequests);
+        const booksWithImages = books.map((book, index) => ({
+          ...book,
+          image: dogImages[index].data.message,
+        }));
+      setMovies(booksWithImages);
     } catch (error) {
       setError('Failed to fetch movies. Please try again later.');
     }
     setLoading(false);
   }
 
-  useEffect(() => {
-    searchMovies('superman');
-  }, []);
 
   return (
     <div className="app">
